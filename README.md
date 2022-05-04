@@ -54,3 +54,20 @@ info Run CLI with --verbose flag for more details.
 # Solution
 ### Add this line 👇 to your gradle.properties in the root file of your android folder
 >>>>> org.gradle.jvmargs=-Xmx1536M --add-exports=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-exports=jdk.unsupported/sun.misc=ALL-UNNAMED
+
+
+
+
+
+
+
+
+
+
+
+2.I use a login in my app, when I test on development environment on my phone I have any trouble I can log in. But when I build the release APK it seems like the app can not connect with the fetch (the code enter in the catch of the fetch)
+My AndroidMainfest.xml has the INTERNET pemission. This issue Arises when you use the api link is *http* instead of *https*
+
+#  Solution 
+### This line 👇  in your <application> tag in android\app\src\main\AndroidManifest.xml
+    >>>>> android:usesCleartextTraffic="true" 
