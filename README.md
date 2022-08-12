@@ -65,9 +65,31 @@ info Run CLI with --verbose flag for more details.
 
 
 
-2.I use a login in my app, when I test on development environment on my phone I have any trouble I can log in. But when I build the release APK it seems like the app can not connect with the fetch (the code enter in the catch of the fetch)
+##### 2.I use a login in my app, when I test on development environment on my phone I have any trouble I can log in. But when I build the release APK it seems like the app can not connect with the fetch (the code enter in the catch of the fetch)
 My AndroidMainfest.xml has the INTERNET pemission. This issue Arises when you use the api link is *http* instead of *https*
 
 #  Solution 
 ### This line 👇  in your <application> tag in android\app\src\main\AndroidManifest.xml
     >>>>> android:usesCleartextTraffic="true" 
+    
+    
+##### 3.Flat List - ScrollToIndex should be used in conjunction with getItemLayout or onScrollToIndexFailed
+
+# Solution 
+Get the flatlist ref by using useRef or ref in class component and use the onScrollToIndexFailed props of the flatlist to handle it
+as shown below 👇
+>>>> <FlatList
+      ref={flatListRef}
+      ...
+      onScrollToIndexFailed={({
+        index,
+        averageItemLength,
+      }) => {
+        // Layout doesn't know the exact location of the requested element.
+        // Falling back to calculating the destination manually
+        flatListRef.current?.scrollToOffset({
+          offset: index * averageItemLength,
+          animated: true,
+        });
+      }}
+    />
