@@ -93,3 +93,29 @@ as shown below 👇
         });
       }}
     />
+    
+    
+    #### Could not find com.facebook.react:react-native:0.68.2.
+    ## Solution 
+    ### Add this fix to your android -> build.gradle file as follows:
+    buildscript {
+    // ...
+}
+
+
+allprojects {
+    repositories {
+       exclusiveContent {
+           filter {
+               includeGroup "com.facebook.react"
+           }
+           forRepository {
+               maven {
+                   url "$rootDir/../node_modules/react-native/android"
+               }
+           }
+       }
+        // ...
+    }
+}
+    
