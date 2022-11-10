@@ -93,11 +93,9 @@ as shown below 👇
         });
       }}
     />
-    
-    
-    #### Could not find com.facebook.react:react-native:0.68.2.
-    ## Solution 
-    ### Add this fix to your android -> build.gradle file as follows:
+# Could not find com.facebook.react:react-native:0.68.2.
+## Solution 
+### Add this fix to your android -> build.gradle file as follows:
     buildscript {
     // ...
 }
@@ -117,5 +115,5 @@ allprojects {
        }
         // ...
     }
-}
+}    
     
