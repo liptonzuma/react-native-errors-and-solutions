@@ -98,22 +98,21 @@ as shown below 👇
 ### Add this fix to your android -> build.gradle file as follows:
     buildscript {
     // ...
-}
+    }
 
-
-allprojects {
-    repositories {
-       exclusiveContent {
-           filter {
-               includeGroup "com.facebook.react"
-           }
-           forRepository {
-               maven {
-                   url "$rootDir/../node_modules/react-native/android"
+    allprojects {
+        repositories {
+           exclusiveContent {
+               filter {
+                   includeGroup "com.facebook.react"
+               }
+               forRepository {
+                   maven {
+                       url "$rootDir/../node_modules/react-native/android"
+                   }
                }
            }
-       }
-        // ...
-    }
-}    
+            // ...
+        }
+    }    
     
