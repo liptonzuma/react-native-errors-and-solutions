@@ -114,5 +114,86 @@ as shown below 👇
     {
     //...
     }
-    }    
+    }
+    ##'RCTConvert+AirMap.h' file not found
+    This is the solution 
+    require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+$RNFirebaseAsStaticFramework = true
+
+platform :ios, '13.0'
+install! 'cocoapods', :deterministic_uuids => false
+use_frameworks! :linkage => :static
+
+target 'App' do
+  $static_framework = []
+  config = use_native_modules!
+
+  # Flags change depending on the env values.
+  flags = get_default_flags()
+
+  # React Native Maps dependencies
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+
+  $static_framework += [
+    'react-native-maps',
+    'react-native-google-maps',
+    'Google-Maps-iOS-Utils',
+    'GoogleMaps',
+    'RNPermissions',
+    'Permission-LocationWhenInUse',
+    'Permission-Notifications',
+    'react-native-paste-input',
+    'vision-camera-code-scanner',
+    'VisionCamera'
+  ]
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # Hermes is now enabled by default. Disable by setting this flag to false.
+    # Upcoming versions of React Native may rely on get_default_flags(), but
+    # we make it explicit here to aid in the React Native upgrade process.
+    # :hermes_enabled => true,
+    # :fabric_enabled => flags[:fabric_enabled],
+    # Enables Flipper.
+    #
+    # Note that if you have use_frameworks! enabled, Flipper will not work and
+    # you should disable the next line.
+    # :flipper_configuration => FlipperConfiguration.enabled,
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  target 'AppTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  # ****** THIS IS THE MAGIC ******
+  pre_install do |installer|
+    Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+        installer.pod_targets.each do |pod|
+            if $static_framework.include?(pod.name)
+                def pod.build_type;
+                Pod::BuildType.static_library # >= 1.9
+            end
+        end
+    end
+  end
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      # Set `mac_catalyst_enabled` to `true` in order to apply patches
+      # necessary for Mac Catalyst builds
+      :mac_catalyst_enabled => false
+    )
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
+    installer.pods_project.build_configurations.each do |config|
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+    end
+  end
+end
     
